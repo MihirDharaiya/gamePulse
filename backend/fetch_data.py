@@ -1,5 +1,4 @@
 import requests
-import pandas as pd
 import psycopg2
 from dotenv import load_dotenv
 import os
@@ -235,70 +234,74 @@ def fetch_game_data():
     steam_games = fetch_steam_games()
     itch_games = fetch_itch_games()
     game_data = steam_games + itch_games
-    df_games = pd.DataFrame(game_data)
-    print("Games DataFrame:")
-    print(df_games.head())
+    print(f"Total games fetched: {len(game_data)}")
+    print("Sample games:")
+    for game in game_data[:3]:
+        print(f"- {game['name']} ({game['source']})")
 
     creator_data = []
-    for game in df_games["name"].head(2):  # Limit to 2 games for testing
-        creator_data.extend(fetch_youtube_creators(game))
-        creator_data.extend(fetch_twitch_creators(game))
+    # Get game names for creator fetching
+    game_names = [game["name"] for game in game_data[:2]]  # Limit to 2 games for testing
+    for game_name in game_names:
+        creator_data.extend(fetch_youtube_creators(game_name))
+        creator_data.extend(fetch_twitch_creators(game_name))
         time.sleep(1)
 
-    df_creators = pd.DataFrame(creator_data)
-    print("Creators DataFrame:")
-    print(df_creators.head())
+    print(f"Total creators fetched: {len(creator_data)}")
+    print("Sample creators:")
+    for creator in creator_data[:3]:
+        print(f"- {creator['name']} ({creator['platform']})")
 
     try:
         conn = psycopg2.connect(SUPABASE_URL)
         cursor = conn.cursor()
 
-        for _, row in df_games.iterrows():
+        for game in game_data:
             try:
                 cursor.execute("""
                     INSERT INTO game_stats (name, player_count, price, avg_playtime, genres, timestamp, source)
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
                 """, (
-                    row["name"],
-                    row["player_count"],
-                    row["price"],
-                    row["avg_playtime"],
-                    row["genres"],
-                    row["timestamp"],
-                    row["source"]
+                    game["name"],
+                    game["player_count"],
+                    game["price"],
+                    game["avg_playtime"],
+                    game["genres"],
+                    game["timestamp"],
+                    game["source"]
                 ))
                 cursor.execute("""
                     INSERT INTO price_history (game_id, name, price, timestamp, source)
                     VALUES (%s, %s, %s, %s, %s)
                 """, (
-                    row["game_id"],
-                    row["name"],
-                    row["price"],
-                    row["timestamp"],
-                    row["source"]
+                    game["game_id"],
+                    game["name"],
+                    game["price"],
+                    game["timestamp"],
+                    game["source"]
                 ))
             except psycopg2.IntegrityError:
-                print(f"Skipping duplicate game entry for {row['name']}")
+                print(f"Skipping duplicate game entry for {game['name']}")
                 conn.rollback()
                 continue
 
-        for _, row in df_creators.iterrows():
+        for creator in creator_data:
             try:
                 cursor.execute("""
                     INSERT INTO creator_stats (creator_id, name, platform, subscriber_count, video_count, total_views, game_name, timestamp)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 """, (
-                    row["creator_id"],
-                    row["name"],
-                    row["platform"],
-                    row["subscriber_count"],
-                    row["video_count"],
-                    row["total_views"],
-                    row["game_name"],
-                    row["timestamp"]
+                    creator["creator_id"],
+                    creator["name"],
+                    creator["platform"],
+                    creator["subscriber_count"],
+                    creator["video_count"],
+                    creator["total_views"],
+                    creator["game_name"],
+                    creator["timestamp"]
                 ))
             except psycopg2.IntegrityError:
-                print(f"Skipping duplicate creator entry for {row['name']}")
+                print(f"Skipping duplicate creator entry for {creator['name']}")
                 conn.rollback()
                 continue
 
