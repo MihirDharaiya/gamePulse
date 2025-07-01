@@ -18,6 +18,19 @@ app.add_middleware(
 load_dotenv()
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 
+@app.get("/")
+async def root():
+    return {
+        "message": "GamePulse API is running!",
+        "endpoints": [
+            "/trending-games",
+            "/top-genres", 
+            "/playtime-insights",
+            "/affordable-games",
+            "/top-creators"
+        ]
+    }
+
 def execute_query(query, params=None):
     """Helper function to execute SQL queries and return results as dictionaries"""
     try:
