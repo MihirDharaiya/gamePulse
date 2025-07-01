@@ -2,22 +2,34 @@
   "version": 2,
   "builds": [
     {
-      "src": "app.py",
-      "use": "@vercel/python"
-    },
-    {
       "src": "api/**/*.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "src": "/trending-games",
+      "dest": "/api/trending-games.py"
     },
     {
-      "src": "/(.*)",
-      "dest": "app.py"
+      "src": "/top-genres",
+      "dest": "/api/top-genres.py"
+    },
+    {
+      "src": "/playtime-insights",
+      "dest": "/api/playtime-insights.py"
+    },
+    {
+      "src": "/affordable-games",
+      "dest": "/api/affordable-games.py"
+    },
+    {
+      "src": "/top-creators",
+      "dest": "/api/top-creators.py"
+    },
+    {
+      "src": "/",
+      "dest": "/api/test.py"
     }
   ]
 } 
