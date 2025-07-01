@@ -39,8 +39,8 @@ export default function Analytics() {
       try {
         setLoading(true);
         const [gamesResponse, creatorsResponse] = await Promise.all([
-          axios.get("http://127.0.0.1:8000/trending-games?limit=100"),
-          axios.get("http://127.0.0.1:8000/top-creators?limit=50")
+          axios.get("/api/trending-games?limit=100"),
+          axios.get("/api/top-creators?limit=50")
         ]);
         setGames(gamesResponse.data);
         setCreators(creatorsResponse.data);

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ScatterChart, Scatter, PieChart, Pie, Cell } from "recharts";
+import {XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ScatterChart, Scatter, PieChart, Pie, Cell } from "recharts";
 import Navigation from "@/components/Navigation";
 import MetricCard from "@/components/MetricCard";
 import CreatorCard from "@/components/CreatorCard";
@@ -44,8 +44,8 @@ export default function Creators() {
         const gameParam = selectedGame ? `&game_name=${encodeURIComponent(selectedGame)}` : "";
         const sortParam = sortBy ? `&sort_by=${encodeURIComponent(sortBy)}` : "";
         const [creatorsResponse, gamesResponse] = await Promise.all([
-          axios.get(`http://127.0.0.1:8000/top-creators?limit=24${platformParam}${gameParam}${sortParam}`),
-          axios.get("http://127.0.0.1:8000/trending-games?limit=50")
+          axios.get(`/api/top-creators?limit=24${platformParam}${gameParam}${sortParam}`),
+          axios.get("/api/trending-games?limit=50")
         ]);
         setCreators(creatorsResponse.data);
         setFilteredCreators(creatorsResponse.data);

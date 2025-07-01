@@ -49,7 +49,7 @@ def fetch_steam_games():
         games = response.json()
         print(f"Fetched {len(games)} Steam games")
         game_data = []
-        for appid, data in list(games.items())[:5]:  # Limit to 5 for testing
+        for appid, data in list(games.items()):  # Limit to 5 for testing
             game = fetch_steam_game_details(appid, data.get("name", "Unknown"))
             game["source"] = "Steam"
             game_data.append(game)
@@ -110,10 +110,22 @@ def fetch_itch_games():
         feed = feedparser.parse(url)
         game_data = []
         for entry in feed.entries[:3]:  # Limit to 3 for testing
-            game_id = entry.link.split("/")[-1]
-            name = entry.title
+            # Handle link safely
+            link = getattr(entry, 'link', '')
+            game_id = link.split("/")[-1] if link else "unknown"
+            
+            # Handle title safely
+            name = getattr(entry, 'title', 'Unknown Game')
+            
             price = "Free"
-            genres = ", ".join([tag.term for tag in entry.tags if tag.term]) or "Indie"
+            
+            # Handle tags safely
+            tags = getattr(entry, 'tags', [])
+            if tags and hasattr(tags[0], 'term'):
+                genres = ", ".join([tag.term for tag in tags if hasattr(tag, 'term') and tag.term]) or "Indie"
+            else:
+                genres = "Indie"
+                
             game_data.append({
                 "game_id": f"itch_{game_id}",
                 "name": name,

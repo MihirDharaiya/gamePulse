@@ -36,7 +36,7 @@ export default function Publishers() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const gamesResponse = await axios.get("http://127.0.0.1:8000/trending-games?limit=100");
+        const gamesResponse = await axios.get("/api/trending-games?limit=100");
         const gamesData = gamesResponse.data;
         setGames(gamesData);
 

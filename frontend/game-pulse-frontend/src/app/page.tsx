@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import Navigation from "@/components/Navigation";
 import MetricCard from "@/components/MetricCard";
 import GameCard from "@/components/GameCard";
@@ -30,13 +30,21 @@ interface PlaytimeInsight {
   source: string;
 }
 
-interface AffordableGame {
-  name: string;
-  player_count: number;
-  price: string;
-  genres: string;
-  source: string;
-}
+// interface AffordableGame {
+//   name: string;
+//   player_count: number;
+//   price: string;
+//   genres: string;
+//   source: string;
+// }
+
+// interface AffordableGame {
+//   name: string;
+//   player_count: number;
+//   price: string;
+//   genres: string;
+//   source: string;
+// }
 
 const COLORS = ['#3b82f6', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444'];
 
@@ -45,7 +53,7 @@ export default function Home() {
   const [filteredGames, setFilteredGames] = useState<Game[]>([]);
   const [genres, setGenres] = useState<Genre[]>([]);
   const [playtimeInsights, setPlaytimeInsights] = useState<PlaytimeInsight[]>([]);
-  const [affordableGames, setAffordableGames] = useState<AffordableGame[]>([]);
+  // const [affordableGames, setAffordableGames] = useState<AffordableGame[]>([]);
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
   const [selectedSource, setSelectedSource] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -58,17 +66,15 @@ export default function Home() {
         setLoading(true);
         const genreParam = selectedGenre ? `&genre=${encodeURIComponent(selectedGenre)}` : "";
         const sourceParam = selectedSource ? `&source=${encodeURIComponent(selectedSource)}` : "";
-        const [gamesResponse, genresResponse, playtimeResponse, affordableResponse] = await Promise.all([
-          axios.get(`http://127.0.0.1:8000/trending-games?limit=12${genreParam}${sourceParam}`),
-          axios.get("http://127.0.0.1:8000/top-genres"),
-          axios.get("http://127.0.0.1:8000/playtime-insights"),
-          axios.get("http://127.0.0.1:8000/affordable-games")
+        const [gamesResponse, genresResponse, playtimeResponse] = await Promise.all([
+          axios.get(`/api/trending-games?limit=12${genreParam}${sourceParam}`),
+          axios.get("/api/top-genres"),
+          axios.get("/api/playtime-insights")
         ]);
         setGames(gamesResponse.data);
         setFilteredGames(gamesResponse.data);
         setGenres(genresResponse.data);
         setPlaytimeInsights(playtimeResponse.data);
-        setAffordableGames(affordableResponse.data);
       } catch (error: unknown) {
         setError("Failed to fetch dashboard data");
         console.error("Error fetching data:", error);
@@ -203,7 +209,7 @@ export default function Home() {
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={({ genre, percent }) => `${genre} ${(percent * 100).toFixed(0)}%`}
+                    // label={({ genre, percent }) => `${genre} ${(percent * 100).toFixed(0)}%`}
                     outerRadius={80}
                     fill="#8884d8"
                     dataKey="total_players"
@@ -274,7 +280,7 @@ export default function Home() {
         </div>
 
         {/* Affordable Games Section */}
-        <div>
+        {/* <div>
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-gray-900">Best Value Games</h2>
             <span className="text-sm text-gray-500">Free or under $10</span>
@@ -283,7 +289,7 @@ export default function Home() {
           {affordableGames.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
               {affordableGames.map((game, index) => (
-                <GameCard key={`${game.source}-${game.name}`} game={game} rank={index + 1} />
+               <GameCard key={`${game.source}-${game.name}`} game={game} rank={index + 1} />
               ))}
             </div>
           ) : (
@@ -292,8 +298,8 @@ export default function Home() {
                 <LoadingCard key={index} />
               ))}
             </div>
-          )}
-        </div>
+          )} 
+        </div> */}
       </div>
     </div>
   );

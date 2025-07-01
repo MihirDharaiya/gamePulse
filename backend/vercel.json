@@ -1,0 +1,20 @@
+{
+  "functions": {
+    "app.py": {
+      "runtime": "python3.9"
+    }
+  },
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/app.py"
+    }
+  ],
+  "env": {
+    "SUPABASE_URL": "@supabase-url",
+    "STEAM_API_KEY": "@steam-api-key",
+    "YOUTUBE_API_KEY": "@youtube-api-key",
+    "TWITCH_CLIENT_ID": "@twitch-client-id",
+    "TWITCH_CLIENT_SECRET": "@twitch-client-secret"
+  }
+} 

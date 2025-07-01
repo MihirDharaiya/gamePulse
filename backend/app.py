@@ -4,6 +4,7 @@ import psycopg2
 from dotenv import load_dotenv
 import os
 import pandas as pd
+from typing import Optional
 
 app = FastAPI(title="Gaming Intelligence API")
 
@@ -19,7 +20,7 @@ load_dotenv()
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 
 @app.get("/trending-games")
-async def get_trending_games(limit: int = 10, genre: str = None, source: str = None):
+async def get_trending_games(limit: int = 10, genre: Optional[str] = None, source: Optional[str] = None):
     try:
         conn = psycopg2.connect(SUPABASE_URL)
         query = """
@@ -30,14 +31,15 @@ async def get_trending_games(limit: int = 10, genre: str = None, source: str = N
                 FROM game_stats
             )
         """
-        params = [limit]
+        params = []
         if genre:
             query += " AND genres LIKE %s"
-            params.insert(0, f"%{genre}%")
+            params.append(f"%{genre}%")
         if source:
             query += " AND source = %s"
-            params.insert(0, source)
+            params.append(source)
         query += " ORDER BY player_count DESC, name ASC LIMIT %s"
+        params.append(limit)
         df = pd.read_sql_query(query, conn, params=params)
         conn.close()
         return df.to_dict(orient="records")
@@ -99,8 +101,8 @@ async def get_affordable_games():
             AND (
                 price = 'Free'
                 OR (
-                    price ~ '^\$?\d*\.?\d{0,2}$'
-                    AND CAST(REGEXP_REPLACE(price, '[^\d.]', '') AS FLOAT) <= 10.0
+                    price ~ '^\\$?\\d*\\.?\\d{0,2}$'
+                    AND CAST(REGEXP_REPLACE(price, '[^\\d.]', '') AS FLOAT) <= 10.0
                 )
             )
             ORDER BY player_count DESC, name ASC
@@ -113,7 +115,7 @@ async def get_affordable_games():
         return {"error": f"Database query error: {str(e)}"}
 
 @app.get("/top-creators")
-async def get_top_creators(limit: int = 10, platform: str = None, game_name: str = None, sort_by: str = "total_views"):
+async def get_top_creators(limit: int = 10, platform: Optional[str] = None, game_name: Optional[str] = None, sort_by: str = "total_views"):
     try:
         conn = psycopg2.connect(SUPABASE_URL)
         sort_column = "total_views"
@@ -130,14 +132,15 @@ async def get_top_creators(limit: int = 10, platform: str = None, game_name: str
                 FROM creator_stats
             )
         """
-        params = [limit]
+        params = []
         if platform:
             query += " AND platform = %s"
-            params.insert(0, platform)
+            params.append(platform)
         if game_name:
             query += " AND game_name = %s"
-            params.insert(0, game_name)
+            params.append(game_name)
         query += f" ORDER BY {sort_column} DESC, name ASC LIMIT %s"
+        params.append(limit)
         df = pd.read_sql_query(query, conn, params=params)
         conn.close()
         return df.to_dict(orient="records")

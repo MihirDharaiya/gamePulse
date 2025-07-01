@@ -41,8 +41,8 @@ export default function Games() {
         const genreParam = selectedGenre ? `&genre=${encodeURIComponent(selectedGenre)}` : "";
         const sourceParam = selectedSource ? `&source=${encodeURIComponent(selectedSource)}` : "";
         const [gamesResponse, genresResponse] = await Promise.all([
-          axios.get(`http://127.0.0.1:8000/trending-games?limit=50${genreParam}${sourceParam}`),
-          axios.get("http://127.0.0.1:8000/top-genres")
+          axios.get(`/api/trending-games?limit=50${genreParam}${sourceParam}`),
+          axios.get("/api/top-genres")
         ]);
         setGames(gamesResponse.data);
         setFilteredGames(gamesResponse.data);
