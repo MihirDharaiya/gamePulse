@@ -11,10 +11,10 @@
     }
   ],
   "env": {
-    "SUPABASE_URL": "@supabase-url",
-    "STEAM_API_KEY": "@steam-api-key",
-    "YOUTUBE_API_KEY": "@youtube-api-key",
-    "TWITCH_CLIENT_ID": "@twitch-client-id",
-    "TWITCH_CLIENT_SECRET": "@twitch-client-secret"
+    "SUPABASE_URL": "",
+    "STEAM_API_KEY": "",
+    "YOUTUBE_API_KEY": "",
+    "TWITCH_CLIENT_ID": "",
+    "TWITCH_CLIENT_SECRET": ""
   }
 } 
