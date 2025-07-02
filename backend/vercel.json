@@ -8,28 +8,20 @@
   ],
   "routes": [
     {
+      "src": "/api/hello",
+      "dest": "/api/hello/index.py"
+    },
+    {
+      "src": "/api/trending-games",
+      "dest": "/api/trending-games/index.py"
+    },
+    {
       "src": "/hello",
-      "dest": "/api/hello.py"
+      "dest": "/api/hello/index.py"
     },
     {
       "src": "/trending-games",
-      "dest": "/api/trending-games.py"
-    },
-    {
-      "src": "/top-genres",
-      "dest": "/api/top-genres.py"
-    },
-    {
-      "src": "/playtime-insights",
-      "dest": "/api/playtime-insights.py"
-    },
-    {
-      "src": "/affordable-games",
-      "dest": "/api/affordable-games.py"
-    },
-    {
-      "src": "/top-creators",
-      "dest": "/api/top-creators.py"
+      "dest": "/api/trending-games/index.py"
     },
     {
       "src": "/",
