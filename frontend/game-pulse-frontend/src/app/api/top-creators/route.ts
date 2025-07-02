@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
     const game_name = searchParams.get('game_name');
     const sort_by = searchParams.get('sort_by') || 'total_views';
 
-    let url = `${process.env.BACKEND_URL || 'https://game-pulse-nl6xozybg-mihir-dharaiyas-projects.vercel.app'}/top-creators?limit=${limit}&sort_by=${sort_by}`;
+    let url = `${process.env.BACKEND_URL || 'https://game-pulse-n1m4kiq08-mihir-dharaiyas-projects.vercel.app'}/top-creators?limit=${limit}&sort_by=${sort_by}`;
     if (platform) url += `&platform=${platform}`;
     if (game_name) url += `&game_name=${game_name}`;
 

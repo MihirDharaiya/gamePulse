@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
     const genre = searchParams.get('genre');
     const source = searchParams.get('source');
 
-    let url = `${process.env.BACKEND_URL || 'https://game-pulse-nl6xozybg-mihir-dharaiyas-projects.vercel.app'}/trending-games?limit=${limit}`;
+    let url = `${process.env.BACKEND_URL || 'https://game-pulse-n1m4kiq08-mihir-dharaiyas-projects.vercel.app'}/trending-games?limit=${limit}`;
     if (genre) url += `&genre=${genre}`;
     if (source) url += `&source=${source}`;
 
