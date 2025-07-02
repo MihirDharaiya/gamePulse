@@ -2,30 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/**/*.py",
+      "src": "index.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
-      "src": "/api/hello",
-      "dest": "/api/hello/index.py"
-    },
-    {
-      "src": "/api/trending-games",
-      "dest": "/api/trending-games/index.py"
-    },
-    {
-      "src": "/hello",
-      "dest": "/api/hello/index.py"
-    },
-    {
-      "src": "/trending-games",
-      "dest": "/api/trending-games/index.py"
-    },
-    {
-      "src": "/",
-      "dest": "/api/test.py"
+      "src": "/(.*)",
+      "dest": "/index.py"
     }
   ]
 } 
