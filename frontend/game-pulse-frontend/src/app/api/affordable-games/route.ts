@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    const url = `${process.env.BACKEND_URL || 'https://game-pulse-n1m4kiq08-mihir-dharaiyas-projects.vercel.app'}/affordable-games`;
+    const url = `${process.env.BACKEND_URL || 'https://game-pulse-6y4hoj1ei-mihir-dharaiyas-projects.vercel.app'}/affordable-games`;
     const response = await fetch(url);
     const data = await response.json();
 
